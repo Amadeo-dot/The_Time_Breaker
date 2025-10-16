@@ -18,22 +18,22 @@ public class Controlador_Jugador : MonoBehaviour
         rb = GetComponent <Rigidbody>(); 
     }
 
-    void Update(InputValue movementValue)
-    {
-        Vector2 movementVector = movementValue.Get<Vector2>(); 
-        movimientoX = movementVector.x; 
-        movimientoY = movementVector.y; 
-    }
-
-    private void FixedUpdate() 
+    void Update()
     {
         
     }
 
-    void OnMove ()
+    private void FixedUpdate() 
     {
         Vector3 movement = new Vector3 (movimientoX, 0.0f, movimientoY);
         rb.AddForce(rb.position + movement.normalized * velocidad * Time.fixedDeltaTime);
+    }
+
+    void OnMove (InputValue movementValue)
+    {
+        Vector2 movementVector = movementValue.Get<Vector2>(); 
+        movimientoX = movementVector.x; 
+        movimientoY = movementVector.y; 
     }
 
     void OnJump()
