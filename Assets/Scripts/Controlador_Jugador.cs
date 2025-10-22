@@ -1,48 +1,70 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using TMPro;
 
-public class Controlador_Jugador : MonoBehaviour
+public class player_control : MonoBehaviour
 {
-    private Rigidbody rb; 
+    public float speed = 5f;
+    public float sensitivity = 2f;
+    public float jumpHeight = 2f;
+    public float gravity = -9.81f;
+    public Camera playerCamera;
 
-    //Movimiento
-    private float movimientoX;
-    private float movimientoY;
-    private bool tocaSuelo = true;
-    public float velocidad = 0;
-    public float fuerzaSalto = 0;
+    private CharacterController controller;
+    private Vector2 moveInput;
+    private Vector2 lookInput;
+    private float xRotation = 0f;
+    private float verticalVelocity = 0f;
 
     void Start()
     {
-        rb = GetComponent <Rigidbody>(); 
+        controller = GetComponent<CharacterController>();
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    void OnMove(InputValue value)
+    {
+        moveInput = value.Get<Vector2>();
+    }
+
+    void OnLook(InputValue value)
+    {
+        lookInput = value.Get<Vector2>();
     }
 
     void Update()
     {
-        
+        // Movimiento horizontal
+        Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
+
+        // Aplicar gravedad
+        if (controller.isGrounded && verticalVelocity < 0)
+        {
+            verticalVelocity = -2f; // Pequeña fuerza hacia abajo para mantener al jugador pegado al suelo
+        }
+
+        verticalVelocity += gravity * Time.deltaTime;
+        move.y = verticalVelocity;
+
+        // Mover al jugador
+        controller.Move(move * speed * Time.deltaTime);
+
+        // Rotación de cámara
+        float mouseX = lookInput.x * sensitivity;
+        float mouseY = lookInput.y * sensitivity;
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -80f, 80f);
+
+        playerCamera.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+        transform.Rotate(Vector3.up * mouseX);
     }
 
-    private void FixedUpdate() 
-    {
-        Vector3 movement = new Vector3 (movimientoX, 0.0f, movimientoY);
-        rb.AddForce(rb.position + movement.normalized * velocidad * Time.fixedDeltaTime);
-    }
-
-    void OnMove (InputValue movementValue)
-    {
-        Vector2 movementVector = movementValue.Get<Vector2>(); 
-        movimientoX = movementVector.x; 
-        movimientoY = movementVector.y; 
-    }
-
+    // Función de salto
     void OnJump()
     {
-        if (tocaSuelo)
+        if (controller.isGrounded)
         {
-            rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
-            tocaSuelo = false;
+            verticalVelocity = Mathf.Sqrt(jumpHeight * 1.5f);
         }
     }
-
 }
