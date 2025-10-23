@@ -57,6 +57,11 @@ public class player_control : MonoBehaviour
 
         playerCamera.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
         transform.Rotate(Vector3.up * mouseX);
+
+        if (Keyboard.current.f5Key.wasPressedThisFrame)
+        {
+            playerCamera.transform.position = new Vector3(0f, 2f, -5f);
+        }
     }
 
     // Función de salto

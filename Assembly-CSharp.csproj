@@ -47,7 +47,9 @@
     <Analyzer Include="/home/alumne/Unity/Hub/Editor/6000.2.6f2/Editor/Data/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Scripts/RewindObject.cs" />
     <Compile Include="Assets/Scripts/Controlador_Jugador.cs" />
+    <Compile Include="Assets/Scripts/ManejoTiempo.cs" />
     <Compile Include="Assets/TutorialInfo/Scripts/Readme.cs" />
   </ItemGroup>
   <ItemGroup>
