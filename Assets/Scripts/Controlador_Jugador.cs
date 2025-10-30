@@ -46,7 +46,7 @@ public class player_control : MonoBehaviour
         move.y = verticalVelocity;
 
         // Mover al jugador
-        controller.Move(move * speed * Time.deltaTime);
+        controller.Move(move * speed);
 
         // Rotación de cámara
         float mouseX = lookInput.x * sensitivity;
